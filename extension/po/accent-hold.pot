@@ -1,13 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# This file is put in the public domain.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Accent Hold package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Accent Hold\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 19:53+0200\n"
+"Project-Id-Version: Accent Hold 1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/d101c/accent-hold/issues\n"
+"POT-Creation-Date: 2026-07-25 23:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,170 +17,163 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: accentPicker.js:103
-msgid "Type a letter…"
-msgstr ""
-
-#: prefs.js:15
-msgid "French (fr)"
-msgstr ""
-
-#: prefs.js:16
-msgid "French (oss variant)"
-msgstr ""
-
-#: prefs.js:17
-msgid "English US (us)"
-msgstr ""
-
-#: prefs.js:18
-msgid "English US International"
-msgstr ""
-
-#: prefs.js:19
-msgid "English GB (gb)"
-msgstr ""
-
-#: prefs.js:20
-msgid "German (de)"
-msgstr ""
-
-#: prefs.js:21
-msgid "Spanish (es)"
-msgstr ""
-
-#: prefs.js:22
-msgid "Italian (it)"
-msgstr ""
-
-#: prefs.js:23
-msgid "Portuguese (pt)"
-msgstr ""
-
-#: prefs.js:24
-msgid "Belgian (be)"
-msgstr ""
-
-#: prefs.js:25
-msgid "Swiss (ch)"
-msgstr ""
-
-#: prefs.js:26
-msgid "Canadian (ca)"
-msgstr ""
-
-#: prefs.js:35 panelIndicator.js:23
+#: panelIndicator.js:23 prefs.js:34
 msgid "Accent Hold"
 msgstr ""
 
-#: prefs.js:49
-msgid "Shortcut"
-msgstr ""
-
-#: prefs.js:50
-msgid "Key that triggers the accent picker."
-msgstr ""
-
-#: prefs.js:56 panelIndicator.js:37
+#: panelIndicator.js:37 prefs.js:54
 msgid "Enabled"
-msgstr ""
-
-#: prefs.js:57
-msgid "Enable or disable the shortcut."
-msgstr ""
-
-#: prefs.js:65
-msgid "Combination"
-msgstr ""
-
-#: prefs.js:66
-msgid "Click the button, then press the combination."
-msgstr ""
-
-#: prefs.js:76
-msgid "Disabled"
-msgstr ""
-
-#: prefs.js:98
-msgid "Press a key…"
-msgstr ""
-
-#: prefs.js:139
-msgid "Accelerator (text)"
-msgstr ""
-
-#: prefs.js:195
-msgid "Behavior"
-msgstr ""
-
-#: prefs.js:200
-msgid "Delay before display"
-msgstr ""
-
-#: prefs.js:201
-msgid "Milliseconds before the popup appears."
-msgstr ""
-
-#: prefs.js:214
-msgid "Auto-close (failsafe)"
-msgstr ""
-
-#: prefs.js:215
-msgid "Milliseconds before automatic close."
-msgstr ""
-
-#: prefs.js:231
-msgid "Accentable characters"
-msgstr ""
-
-#: prefs.js:232
-msgid "JSON table: base key → list of accented variants."
-msgstr ""
-
-#: prefs.js:268
-msgid "Modified = saved automatically."
-msgstr ""
-
-#: prefs.js:272
-msgid "Save"
-msgstr ""
-
-#: prefs.js:276
-msgid "Reset"
-msgstr ""
-
-#: prefs.js:293
-msgid "Built-in default table active."
-msgstr ""
-
-#: prefs.js:299
-msgid "Invalid JSON — not saved: "
-msgstr ""
-
-#: prefs.js:303
-msgid "Saved."
-msgstr ""
-
-#: prefs.js:323
-msgid "Reset to the built-in table."
-msgstr ""
-
-#: prefs.js:348
-msgid "Keyboards"
-msgstr ""
-
-#: prefs.js:349
-msgid "Layouts where the shortcut is active (none checked = all active)."
-msgstr ""
-
-#: prefs.js:377
-msgid "No xkb layout detected"
-msgstr ""
-
-#: prefs.js:378
-msgid "The shortcut is active on all keyboards."
 msgstr ""
 
 #: panelIndicator.js:48
 msgid "Preferences"
+msgstr ""
+
+#: prefs.js:14
+msgid "French (fr)"
+msgstr ""
+
+#: prefs.js:15
+msgid "French (oss variant)"
+msgstr ""
+
+#: prefs.js:16
+msgid "English US (us)"
+msgstr ""
+
+#: prefs.js:17
+msgid "English US International"
+msgstr ""
+
+#: prefs.js:18
+msgid "English GB (gb)"
+msgstr ""
+
+#: prefs.js:19
+msgid "German (de)"
+msgstr ""
+
+#: prefs.js:20
+msgid "Spanish (es)"
+msgstr ""
+
+#: prefs.js:21
+msgid "Italian (it)"
+msgstr ""
+
+#: prefs.js:22
+msgid "Portuguese (pt)"
+msgstr ""
+
+#: prefs.js:23
+msgid "Belgian (be)"
+msgstr ""
+
+#: prefs.js:24
+msgid "Swiss (ch)"
+msgstr ""
+
+#: prefs.js:25
+msgid "Canadian (ca)"
+msgstr ""
+
+#: prefs.js:48
+msgid "Shortcuts"
+msgstr ""
+
+#: prefs.js:49
+msgid "Open the variants directly for a base letter."
+msgstr ""
+
+#: prefs.js:55
+msgid "Enable or disable all accent shortcuts."
+msgstr ""
+
+#: prefs.js:62
+msgid "Lowercase accents"
+msgstr ""
+
+#: prefs.js:63
+msgid "Press Ctrl+Super+letter, then choose a number."
+msgstr ""
+
+#: prefs.js:68
+msgid "Uppercase accents"
+msgstr ""
+
+#: prefs.js:69
+msgid "Add Shift: Ctrl+Super+Shift+letter, then choose a number."
+msgstr ""
+
+#: prefs.js:77
+msgid "Behavior"
+msgstr ""
+
+#: prefs.js:82
+msgid "Delay before display"
+msgstr ""
+
+#: prefs.js:83
+msgid "Milliseconds before the popup appears."
+msgstr ""
+
+#: prefs.js:96
+msgid "Auto-close (failsafe)"
+msgstr ""
+
+#: prefs.js:97
+msgid "Milliseconds before automatic close."
+msgstr ""
+
+#: prefs.js:113
+msgid "Accentable characters"
+msgstr ""
+
+#: prefs.js:114
+msgid "JSON table: base key → list of accented variants."
+msgstr ""
+
+#: prefs.js:150
+msgid "Modified = saved automatically."
+msgstr ""
+
+#: prefs.js:154
+msgid "Save"
+msgstr ""
+
+#: prefs.js:158
+msgid "Reset"
+msgstr ""
+
+#: prefs.js:175
+msgid "Built-in default table active."
+msgstr ""
+
+#: prefs.js:181
+msgid "Invalid JSON — not saved: "
+msgstr ""
+
+#: prefs.js:185
+msgid "Saved."
+msgstr ""
+
+#: prefs.js:205
+msgid "Reset to the built-in table."
+msgstr ""
+
+#: prefs.js:230
+msgid "Keyboards"
+msgstr ""
+
+#: prefs.js:231
+msgid ""
+"Layouts where the accent shortcuts are active (none checked = all active)."
+msgstr ""
+
+#: prefs.js:259
+msgid "No xkb layout detected"
+msgstr ""
+
+#: prefs.js:260
+msgid "The accent shortcuts are active on all keyboards."
 msgstr ""

@@ -4,8 +4,7 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as KeyboardStatus from 'resource:///org/gnome/shell/ui/status/keyboard.js';
 
-// Sélecteur d'accents « press-and-hold » à la macOS, déclenché par un raccourci
-// clavier (réglage `trigger`, p.ex. <Super>e).
+// Sélecteur d'accents déclenché directement par Ctrl+Super+lettre.
 //
 // Conçu pour NE JAMAIS geler le clavier :
 //   - try/catch dans le handler -> sur toute exception, on libère le grab
@@ -16,17 +15,13 @@ import * as KeyboardStatus from 'resource:///org/gnome/shell/ui/status/keyboard.
 export class AccentPicker {
     // getSettings/getTable sont des callbacks (=> Gio.Settings / table objet),
     // pour toujours lire la valeur courante au moment du déclenchement.
-    constructor(getSettings, getTable, gettext) {
+    constructor(getSettings, getTable) {
         this._getSettings = getSettings;
         this._getTable = getTable;
-        // Fonction de traduction fournie par extension.js (gettext lié au
-        // domaine `accent-hold`). Repli identité si absente.
-        this._ = gettext || ((s) => s);
 
         this._actor = null;
         this._grab = null;
-        this._hint = null;
-        this._phase = null;        // 'await-letter' | 'variants'
+        this._pendingLetter = null;
         this._variants = [];
         this._index = 0;
         this._chips = [];
@@ -39,14 +34,19 @@ export class AccentPicker {
         this._vdev = seat.create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
     }
 
-    // Point d'entrée appelé par le raccourci clavier.
-    start() {
+    // Point d'entrée appelé par le raccourci de la lettre concernée.
+    start(letter) {
         // Jamais deux popups, ni un double déclenchement pendant la latence.
         if (this._actor || this._delayId)
             return;
 
         if (!this._layoutAllowed())
             return;
+
+        const variants = (this._getTable() || {})[letter];
+        if (!Array.isArray(variants) || variants.length === 0)
+            return;
+        this._pendingLetter = letter;
 
         const settings = this._getSettings();
         let delay = 0;
@@ -87,8 +87,13 @@ export class AccentPicker {
         if (this._actor)
             return;
 
-        this._phase = 'await-letter';
-        this._variants = [];
+        const letter = this._pendingLetter;
+        this._pendingLetter = null;
+        const variants = (this._getTable() || {})[letter];
+        if (!Array.isArray(variants) || variants.length === 0)
+            return;
+
+        this._variants = variants.slice(0, 9); // 1..9 maximum
         this._index = 0;
         this._chips = [];
 
@@ -98,11 +103,17 @@ export class AccentPicker {
             can_focus: true,
             vertical: false,
         });
-        this._hint = new St.Label({
-            style_class: 'accent-hint',
-            text: this._('Type a letter…'), // invite : taper la lettre de base
+        this._chips = this._variants.map((variant, i) => {
+            const chip = new St.Button({
+                style_class: 'accent-chip',
+                label: `${i + 1} ${variant}`,
+                can_focus: false,
+            });
+            chip.connect('clicked', () => this._choose(i));
+            this._actor.add_child(chip);
+            return chip;
         });
-        this._actor.add_child(this._hint);
+        this._highlight();
 
         Main.layoutManager.uiGroup.add_child(this._actor);
         const [x, y] = global.get_pointer();
@@ -145,75 +156,12 @@ export class AccentPicker {
                 this._close();
                 return Clutter.EVENT_STOP;
             }
-            if (this._phase === 'await-letter')
-                return this._onAwaitLetter(event, sym);
             return this._onVariants(event, sym);
         } catch (e) {
             logError(e, 'accent-hold: key handler');
             this._close(); // sur exception : on libère TOUJOURS le grab
             return Clutter.EVENT_STOP;
         }
-    }
-
-    // Phase 1 : on attend la lettre de base.
-    _onAwaitLetter(event, sym) {
-        // Ignore les modificateurs seuls (Shift, Ctrl, Alt, Super…).
-        if (this._isModifier(sym))
-            return Clutter.EVENT_STOP;
-
-        // En GJS, get_key_unicode() renvoie un gunichar marshallé en CHAÎNE d'un
-        // caractère (déjà la lettre, casse incluse), pas un codepoint numérique.
-        // On reste robuste si une version renvoyait un nombre.
-        let ch = event.get_key_unicode();
-        if (typeof ch === 'number')
-            ch = ch > 0 ? String.fromCodePoint(ch) : '';
-        if (!ch) {
-            this._close();
-            return Clutter.EVENT_STOP;
-        }
-        const table = this._getTable() || {};
-        const variants = table[ch];
-        if (variants && variants.length > 0)
-            this._showVariants(ch, variants);
-        else
-            this._close();
-        return Clutter.EVENT_STOP;
-    }
-
-    _isModifier(sym) {
-        return (
-            sym === Clutter.KEY_Shift_L || sym === Clutter.KEY_Shift_R ||
-            sym === Clutter.KEY_Control_L || sym === Clutter.KEY_Control_R ||
-            sym === Clutter.KEY_Alt_L || sym === Clutter.KEY_Alt_R ||
-            sym === Clutter.KEY_Super_L || sym === Clutter.KEY_Super_R ||
-            sym === Clutter.KEY_Meta_L || sym === Clutter.KEY_Meta_R ||
-            sym === Clutter.KEY_Caps_Lock || sym === Clutter.KEY_ISO_Level3_Shift
-        );
-    }
-
-    // Phase 2 : on affiche les variantes accentuées sous forme de boutons.
-    _showVariants(_letter, variants) {
-        this._phase = 'variants';
-        this._variants = variants.slice(0, 9); // 1..9 maximum
-        this._index = 0;
-
-        if (this._hint) {
-            this._actor.remove_child(this._hint);
-            this._hint.destroy();
-            this._hint = null;
-        }
-
-        this._chips = this._variants.map((v, i) => {
-            const chip = new St.Button({
-                style_class: 'accent-chip',
-                label: `${i + 1} ${v}`,
-                can_focus: false,
-            });
-            chip.connect('clicked', () => this._choose(i));
-            this._actor.add_child(chip);
-            return chip;
-        });
-        this._highlight();
     }
 
     _onVariants(event, sym) {
@@ -334,6 +282,7 @@ export class AccentPicker {
             GLib.source_remove(this._delayId);
             this._delayId = 0;
         }
+        this._pendingLetter = null;
         if (this._timeoutId) {
             GLib.source_remove(this._timeoutId);
             this._timeoutId = 0;
@@ -347,11 +296,9 @@ export class AccentPicker {
             this._actor.destroy();
             this._actor = null;
         }
-        this._hint = null;
         this._chips = [];
         this._variants = [];
         this._index = 0;
-        this._phase = null;
     }
 
     destroy() {

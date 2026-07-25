@@ -37,6 +37,7 @@ gnome-extensions pack "$SRC" \
   --extra-source=accentPicker.js \
   --extra-source=accents.json \
   --extra-source=panelIndicator.js \
+  --extra-source=shortcutUtils.js \
   --podir=po \
   --gettext-domain="$DOMAIN" \
   --schema="$SCHEMA" \

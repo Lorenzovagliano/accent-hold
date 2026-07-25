@@ -19,12 +19,12 @@ Links:
 Typing accents on Linux always annoyed me, so I built a small GNOME Shell extension
 that brings the macOS “press-and-hold” feel to GNOME:
 
-- Press a shortcut (default **Super+E**), type a base letter (`e`, `a`, `c`, `o`, `n`…),
-  then pick the accented variant (`é è ê ë`, `ç`, `ñ`, `ô`…) from a popup.
+- Press **Ctrl+Super+letter** (`e`, `a`, `c`, `o`, `n`…), then pick the accented
+  variant (`é è ê ë`, `ç`, `ñ`, `ô`…) from a popup.
 - The character is inserted **wherever your cursor is — text fields, editors and the
   terminal included**.
 - **Pure Shell extension**: no daemon, no root, no dependencies. One-click install.
-- Configurable shortcut, popup delay, character table and active keyboard layouts,
+- Configurable popup delay, character table and active keyboard layouts,
   plus a top-bar toggle. Works on **AZERTY** too (variant selection is layout-aware).
 
 GIF + details: https://github.com/d101c/accent-hold
@@ -38,8 +38,8 @@ Feedback very welcome — especially on layouts/apps I should test.
 
 Just published **Accent Hold** 🎹 — a macOS-style accent picker for #GNOME.
 
-Press a shortcut → type a letter → pick the variant (é è ê ç ñ ô…). Inserted
-anywhere, terminal included. Pure Shell extension, no daemon, no root, one-click install.
+Press Ctrl+Super+letter → pick the variant (é è ê ç ñ ô…). Inserted anywhere,
+terminal included. Pure Shell extension, no daemon, no root, one-click install.
 
 ⬇️ https://extensions.gnome.org/extension/10265/accent-hold/
 ⭐ https://github.com/d101c/accent-hold
@@ -56,8 +56,8 @@ anywhere, terminal included. Pure Shell extension, no daemon, no root, one-click
 I wanted the macOS “hold a key → pick an accent” flow on GNOME/Wayland. The honest
 constraint: truly intercepting a *held letter* in another app on Wayland needs
 privileged input access (evdev daemon + udev + input group) — not something you can
-ship in one click. So I made the pragmatic version: a shortcut opens a picker, you
-type the base letter, then choose the variant. It’s a **pure GNOME Shell extension**
+ship in one click. So I made the pragmatic version: Ctrl+Super+letter opens that
+letter’s picker directly, then you choose the variant. It’s a **pure GNOME Shell extension**
 — no daemon, no root, no deps.
 
 Two things that were fun to get right on GNOME 50 / mutter:
@@ -75,8 +75,8 @@ Install: https://extensions.gnome.org/extension/10265/accent-hold/
 ## This Week in GNOME (submit via #thisweek:gnome.org Matrix, or World/twig MR)
 
 **Accent Hold** — a new extension that brings a macOS-style accent picker to GNOME.
-Press a configurable shortcut, type a base letter, and pick the accented variant
-(é è ê ç ñ ô …) from a popup; it’s inserted wherever your cursor is, terminal included.
+Press Ctrl+Super+letter and pick the accented variant (é è ê ç ñ ô …) from a
+popup; it’s inserted wherever your cursor is, terminal included.
 Pure Shell extension (no daemon, no privileges), with a preferences panel and a
 top-bar toggle. https://extensions.gnome.org/extension/10265/accent-hold/
 
@@ -87,8 +87,8 @@ top-bar toggle. https://extensions.gnome.org/extension/10265/accent-hold/
 **Subject:** New GNOME extension: macOS-style accent picker (no daemon, one-click)
 
 Hi! I just released **Accent Hold**, a GNOME Shell extension that lets you type accented
-characters the macOS way: a shortcut opens a popup of variants (é è ê ç ñ ô …) for the
-letter you type, inserted anywhere including the terminal. It’s a pure Shell extension
+characters quickly: Ctrl+Super+letter opens a popup of variants (é è ê ç ñ ô …)
+for that letter, inserted anywhere including the terminal. It’s a pure Shell extension
 — no daemon, no root — with a preferences panel, a top-bar toggle, i18n (EN/FR), and
 AZERTY support.
 

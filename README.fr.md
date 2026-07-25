@@ -3,24 +3,23 @@
 *Lire dans une autre langue : [English](README.md)*
 
 > **Tapez les caractères accentués à la façon macOS — sans daemon ni privilèges.**
-> Appuyez sur un raccourci configurable, tapez une lettre de base (`e`, `a`, `c`,
-> `o`, `n` …), puis choisissez la variante accentuée voulue (`é è ê ë`, `ç`, `ñ`,
-> `ô` …) dans une popup nette. Le caractère est inséré là où se trouve le curseur —
-> champs texte, éditeurs et terminal compris. Un panneau de préférences intégré
-> permet de régler le raccourci, le délai, la table de caractères et les claviers
-> actifs. Extension GNOME Shell pure — aucun daemon, aucun privilège, aucune
-> dépendance, installable en un clic depuis extensions.gnome.org.
+> Appuyez sur `Ctrl+Super` avec une lettre de base (`e`, `a`, `c`, `o`, `n` …),
+> puis choisissez la variante accentuée voulue (`é è ê ë`, `ç`, `ñ`, `ô` …) dans
+> une popup nette. Le caractère est inséré là où se trouve le curseur — champs
+> texte, éditeurs et terminal compris. Un panneau de préférences intégré permet
+> de régler le délai, la table de caractères et les claviers actifs. Extension
+> GNOME Shell pure — aucun daemon, aucun privilège, aucune dépendance, installable
+> en un clic depuis extensions.gnome.org.
 
 ![Accent Hold en action](docs/demo.gif)
 
 ## Utilisation
 
-1. `Super+E` (raccourci configurable)
-2. tape une lettre de base : `e`, `a`, `c`, `o`, `u`, `n`, `s`, `i`, `y`, `z`
-3. choisis la variante : `1`–`9`, ou `←`/`→` + `Entrée`, ou clic. `Échap` annule.
+1. Appuie sur `Ctrl+Super+e` (ou une autre lettre accentuable).
+2. Choisis la variante : `1`–`9`, ou `←`/`→` + `Entrée`, ou clic. `Échap` annule.
 
 Le caractère est inséré dans le champ qui avait le focus (terminal compris).
-Shift est détecté : `E` propose `É È Ê Ë …`.
+Ajoute Maj pour les majuscules : `Ctrl+Super+Maj+e` propose `É È Ê Ë …`.
 
 ## Installer
 
@@ -47,8 +46,8 @@ gnome-extensions enable accent-hold@griffit.gmail.com
 Panneau de configuration intégré (icône réglages dans l'app *Extensions*, ou
 `gnome-extensions prefs accent-hold@griffit.gmail.com`) :
 
-- **Raccourci** : la touche qui ouvre le sélecteur (défaut `Super+E`).
-- **Activer / inhiber** : coupe le raccourci sans désinstaller l'extension.
+- **Raccourcis** : affiche les combinaisons fixes minuscules et majuscules.
+- **Activer / inhiber** : coupe tous les raccourcis sans désinstaller l'extension.
 - **Délai (ms)** : latence avant l'affichage de la popup (0–1000).
 - **Caractères** : table des variantes accentuées (JSON), surchargeable.
 - **Claviers** : liste des layouts xkb où l'extension est active (vide = tous).
@@ -56,16 +55,16 @@ Panneau de configuration intégré (icône réglages dans l'app *Extensions*, ou
 Tout est stocké dans GSettings
 (`org.gnome.shell.extensions.accent-hold`). En CLI :
 ```bash
-gsettings set org.gnome.shell.extensions.accent-hold trigger "['<Super>grave']"
+gsettings set org.gnome.shell.extensions.accent-hold enabled false
 ```
 
 ## Pourquoi un raccourci et pas « maintenir la lettre » ?
 
 Sous Wayland, intercepter le **maintien d'une lettre normale** dans une autre
 application impose un accès clavier privilégié (evdev) → daemon + `sudo` +
-groupe `input` + `udev` : impossible à distribuer simplement. Le raccourci
-global est capté nativement par le Shell, sans aucun privilège — d'où une
-extension installable en un clic.
+groupe `input` + `udev` : impossible à distribuer simplement. Les raccourcis
+directs `Ctrl+Super+lettre` sont captés nativement par le Shell, sans aucun
+privilège — d'où une extension installable en un clic.
 
 La variante « vrai maintien de la lettre » (daemon Rust evdev + uinput) existe
 dans [`legacy/`](legacy/) : plus fidèle à macOS, mais install lourde

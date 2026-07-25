@@ -3,11 +3,11 @@
 *Read this in another language: [Français](README.fr.md)*
 
 > **Type accented and special characters the macOS way — without a daemon or root.**
-> Press a configurable shortcut, type a base letter (`e`, `a`, `c`, `o`, `n` …),
-> then pick the accented variant you want (`é è ê ë`, `ç`, `ñ`, `ô` …) from a clean
-> popup. The chosen character is injected wherever your cursor is — text fields,
-> editors and the terminal included. A built-in preferences panel lets you customize
-> the shortcut, the popup delay, the character table and the active keyboard layouts.
+> Press `Ctrl+Super` with a base letter (`e`, `a`, `c`, `o`, `n` …), then pick the
+> accented variant you want (`é è ê ë`, `ç`, `ñ`, `ô` …) from a clean popup. The
+> chosen character is injected wherever your cursor is — text fields, editors and
+> the terminal included. A built-in preferences panel lets you customize the popup
+> delay, character table and active keyboard layouts.
 > Pure GNOME Shell extension — no daemon, no privileges, no dependencies, one-click
 > install from extensions.gnome.org.
 
@@ -15,12 +15,11 @@
 
 ## Usage
 
-1. `Super+E` (configurable shortcut)
-2. type a base letter: `e`, `a`, `c`, `o`, `u`, `n`, `s`, `i`, `y`, `z`
-3. pick the variant: `1`–`9`, or `←`/`→` + `Enter`, or click. `Esc` cancels.
+1. Press `Ctrl+Super+e` (or another accentable letter).
+2. Pick the variant: `1`–`9`, or `←`/`→` + `Enter`, or click. `Esc` cancels.
 
 The character is inserted into the field that had focus (terminal included).
-Shift is detected: `E` offers `É È Ê Ë …`.
+Add Shift for uppercase: `Ctrl+Super+Shift+e` offers `É È Ê Ë …`.
 
 ## Install
 
@@ -47,8 +46,8 @@ gnome-extensions enable accent-hold@griffit.gmail.com
 Built-in settings panel (the settings icon in the *Extensions* app, or
 `gnome-extensions prefs accent-hold@griffit.gmail.com`):
 
-- **Shortcut** — the key that opens the picker (default `Super+E`).
-- **Enable / disable** — turns the shortcut off without uninstalling the extension.
+- **Shortcuts** — shows the fixed lowercase and uppercase combinations.
+- **Enable / disable** — turns all accent shortcuts off without uninstalling.
 - **Delay (ms)** — latency before the popup appears (0–1000).
 - **Characters** — table of accented variants (JSON), overridable.
 - **Keyboards** — list of xkb layouts where the extension is active (empty = all).
@@ -56,15 +55,16 @@ Built-in settings panel (the settings icon in the *Extensions* app, or
 Everything is stored in GSettings
 (`org.gnome.shell.extensions.accent-hold`). From the CLI:
 ```bash
-gsettings set org.gnome.shell.extensions.accent-hold trigger "['<Super>grave']"
+gsettings set org.gnome.shell.extensions.accent-hold enabled false
 ```
 
 ## Why a shortcut and not “hold the letter”?
 
 On Wayland, intercepting the **hold of a normal letter** inside another
 application requires privileged keyboard access (evdev) → daemon + `sudo` +
-`input` group + `udev`: impossible to distribute simply. A global shortcut is
-captured natively by the Shell, with no privileges — hence a one-click extension.
+`input` group + `udev`: impossible to distribute simply. The direct
+`Ctrl+Super+letter` shortcuts are captured natively by the Shell, with no
+privileges — hence a one-click extension.
 
 The “true hold-the-letter” variant (Rust evdev + uinput daemon) lives in
 [`legacy/`](legacy/): closer to macOS, but a heavy install (`sudo`, `usermod`,

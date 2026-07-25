@@ -1,6 +1,5 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
-import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
@@ -43,150 +42,33 @@ export default class AccentHoldPreferences extends ExtensionPreferences {
         this._buildLayoutsGroup(page, settings);
     }
 
-    // ---------------------------------------------------------------- Raccourci
+    // --------------------------------------------------------------- Raccourcis
     _buildShortcutGroup(page, settings) {
         const group = new Adw.PreferencesGroup({
-            title: _('Shortcut'),
-            description: _('Key that triggers the accent picker.'),
+            title: _('Shortcuts'),
+            description: _('Open the variants directly for a base letter.'),
         });
         page.add(group);
 
-        // enabled : SwitchRow lié directement.
         const enabledRow = new Adw.SwitchRow({
             title: _('Enabled'),
-            subtitle: _('Enable or disable the shortcut.'),
+            subtitle: _('Enable or disable all accent shortcuts.'),
         });
         group.add(enabledRow);
         settings.bind('enabled', enabledRow, 'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        // trigger : ActionRow + bouton de capture (Gtk.EventControllerKey).
-        const triggerRow = new Adw.ActionRow({
-            title: _('Combination'),
-            subtitle: _('Click the button, then press the combination.'),
+        const lowercaseRow = new Adw.ActionRow({
+            title: _('Lowercase accents'),
+            subtitle: _('Press Ctrl+Super+letter, then choose a number.'),
         });
+        group.add(lowercaseRow);
 
-        const button = new Gtk.Button({
-            valign: Gtk.Align.CENTER,
-            has_frame: true,
+        const uppercaseRow = new Adw.ActionRow({
+            title: _('Uppercase accents'),
+            subtitle: _('Add Shift: Ctrl+Super+Shift+letter, then choose a number.'),
         });
-
-        const accelLabel = (arr) => {
-            const a = arr && arr.length ? arr[0] : '';
-            return a ? a : _('Disabled');
-        };
-        const refreshButton = () => {
-            button.label = accelLabel(settings.get_strv('trigger'));
-        };
-        refreshButton();
-
-        let capturing = false;
-        const keyController = new Gtk.EventControllerKey();
-        button.add_controller(keyController);
-
-        const stopCapture = () => {
-            capturing = false;
-            refreshButton();
-        };
-
-        button.connect('clicked', () => {
-            if (capturing) {
-                stopCapture();
-                return;
-            }
-            capturing = true;
-            button.label = _('Press a key…');
-            button.grab_focus();
-        });
-
-        keyController.connect('key-pressed', (_c, keyval, _keycode, state) => {
-            if (!capturing)
-                return Gdk.EVENT_PROPAGATE;
-
-            // Échap : annuler. Backspace/Delete : effacer.
-            if (keyval === Gdk.KEY_Escape) {
-                stopCapture();
-                return Gdk.EVENT_STOP;
-            }
-            if (keyval === Gdk.KEY_BackSpace || keyval === Gdk.KEY_Delete) {
-                settings.set_strv('trigger', []);
-                stopCapture();
-                return Gdk.EVENT_STOP;
-            }
-
-            // Ignorer les modificateurs seuls.
-            if (this._isModifierKey(keyval))
-                return Gdk.EVENT_STOP;
-
-            const mask = state & Gtk.accelerator_get_default_mod_mask();
-            if (!Gtk.accelerator_valid(keyval, mask))
-                return Gdk.EVENT_STOP;
-
-            const accel = Gtk.accelerator_name(keyval, mask);
-            if (accel) {
-                settings.set_strv('trigger', [accel]);
-            }
-            stopCapture();
-            return Gdk.EVENT_STOP;
-        });
-
-        triggerRow.add_suffix(button);
-        triggerRow.activatable_widget = button;
-        group.add(triggerRow);
-
-        // Repli : EntryRow éditable pour saisir l'accélérateur à la main.
-        const entryRow = new Adw.EntryRow({
-            title: _('Accelerator (text)'),
-        });
-        const syncEntry = () => {
-            const arr = settings.get_strv('trigger');
-            entryRow.text = arr && arr.length ? arr[0] : '';
-        };
-        syncEntry();
-        entryRow.connect('apply', () => {
-            const txt = entryRow.text.trim();
-            if (txt === '') {
-                settings.set_strv('trigger', []);
-                return;
-            }
-            const [ok, keyval, mods] = Gtk.accelerator_parse(txt);
-            if (ok && Gtk.accelerator_valid(keyval, mods)) {
-                settings.set_strv('trigger', [Gtk.accelerator_name(keyval, mods)]);
-            } else {
-                // Saisie libre : on l'enregistre telle quelle (l'utilisateur sait).
-                settings.set_strv('trigger', [txt]);
-            }
-        });
-        group.add(entryRow);
-
-        // Garder les widgets synchronisés avec la clé.
-        const changedId = settings.connect('changed::trigger', () => {
-            refreshButton();
-            syncEntry();
-        });
-        window_destroy_cleanup(group, settings, changedId);
-    }
-
-    _isModifierKey(keyval) {
-        switch (keyval) {
-            case Gdk.KEY_Shift_L:
-            case Gdk.KEY_Shift_R:
-            case Gdk.KEY_Control_L:
-            case Gdk.KEY_Control_R:
-            case Gdk.KEY_Alt_L:
-            case Gdk.KEY_Alt_R:
-            case Gdk.KEY_Super_L:
-            case Gdk.KEY_Super_R:
-            case Gdk.KEY_Meta_L:
-            case Gdk.KEY_Meta_R:
-            case Gdk.KEY_Hyper_L:
-            case Gdk.KEY_Hyper_R:
-            case Gdk.KEY_Caps_Lock:
-            case Gdk.KEY_ISO_Level3_Shift:
-                return true;
-            default:
-                return false;
-        }
+        group.add(uppercaseRow);
     }
 
     // ------------------------------------------------------------- Comportement
@@ -346,7 +228,7 @@ export default class AccentHoldPreferences extends ExtensionPreferences {
     _buildLayoutsGroup(page, settings) {
         const group = new Adw.PreferencesGroup({
             title: _('Keyboards'),
-            description: _('Layouts where the shortcut is active (none checked = all active).'),
+            description: _('Layouts where the accent shortcuts are active (none checked = all active).'),
         });
         page.add(group);
 
@@ -375,7 +257,7 @@ export default class AccentHoldPreferences extends ExtensionPreferences {
         if (sources.length === 0) {
             const empty = new Adw.ActionRow({
                 title: _('No xkb layout detected'),
-                subtitle: _('The shortcut is active on all keyboards.'),
+                subtitle: _('The accent shortcuts are active on all keyboards.'),
             });
             group.add(empty);
             return;
@@ -417,15 +299,4 @@ export default class AccentHoldPreferences extends ExtensionPreferences {
             group.add(row);
         }
     }
-}
-
-// Déconnecte un handler de settings quand le widget racine est détruit,
-// pour éviter de garder une référence morte.
-function window_destroy_cleanup(widget, settings, handlerId) {
-    widget.connect('destroy', () => {
-        if (handlerId) {
-            settings.disconnect(handlerId);
-            handlerId = 0;
-        }
-    });
 }
