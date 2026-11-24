@@ -1,3 +1,4 @@
+import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -13,7 +14,7 @@ import {
 const KEYBINDING_NAME = 'letter-shortcuts';
 
 // Extension « Accent Hold » : Ctrl+Super+lettre ouvre directement les variantes
-// minuscules de cette lettre. Shift+Ctrl+Super+lettre ouvre les majuscules.
+// de cette lettre, en respectant Maj et Verr. Maj pour la casse.
 export default class AccentHoldExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
@@ -136,8 +137,8 @@ export default class AccentHoldExtension extends Extension {
         this._bound = false;
     }
 
-    // Caps Lock ne décide pas de la casse : seul Shift demande les variantes
-    // majuscules. Le keysym donne une lettre fiable même avec Ctrl enfoncé.
+    // Le keysym identifie la lettre même avec Ctrl enfoncé ; les modificateurs
+    // de l'événement déterminent la casse (Maj inverse Verr. Maj).
     _letterFromEvent(event) {
         if (!event)
             return '';
@@ -145,6 +146,7 @@ export default class AccentHoldExtension extends Extension {
             return letterFromKeySymbol(
                 event.get_key_symbol(),
                 event.has_shift_modifier(),
+                !!(event.get_state() & Clutter.ModifierType.LOCK_MASK),
             );
         } catch (e) {
             logError(e, 'accent-hold: read shortcut letter');

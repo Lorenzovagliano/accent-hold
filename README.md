@@ -20,6 +20,8 @@
 
 The character is inserted into the field that had focus (terminal included).
 Add Shift for uppercase: `Ctrl+Super+Shift+e` offers `É È Ê Ë …`.
+With Caps Lock on, `Ctrl+Super+e` offers uppercase accents by default;
+adding Shift offers lowercase accents.
 
 ## Install
 

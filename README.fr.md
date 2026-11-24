@@ -20,6 +20,8 @@
 
 Le caractère est inséré dans le champ qui avait le focus (terminal compris).
 Ajoute Maj pour les majuscules : `Ctrl+Super+Maj+e` propose `É È Ê Ë …`.
+Avec Verr. Maj activé, `Ctrl+Super+e` propose les accents majuscules par défaut ;
+ajouter Maj propose les accents minuscules.
 
 ## Installer
 

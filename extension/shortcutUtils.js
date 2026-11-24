@@ -15,7 +15,7 @@ export function buildAccelerators(table) {
         });
 }
 
-export function letterFromKeySymbol(symbol, shifted) {
+export function letterFromKeySymbol(symbol, shifted, capsLocked = false) {
     const upperA = 'A'.codePointAt(0);
     const upperZ = 'Z'.codePointAt(0);
     const lowerA = 'a'.codePointAt(0);
@@ -29,5 +29,6 @@ export function letterFromKeySymbol(symbol, shifted) {
 
     if (!letter)
         return '';
-    return shifted ? letter.toUpperCase() : letter;
+    // Shift reverses Caps Lock, just as it does when typing a letter normally.
+    return shifted !== capsLocked ? letter.toUpperCase() : letter;
 }

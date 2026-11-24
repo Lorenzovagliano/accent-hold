@@ -29,10 +29,28 @@ assertEqual(letterFromKeySymbol('e'.codePointAt(0), false), 'e',
     'lowercase shortcut');
 assertEqual(letterFromKeySymbol('e'.codePointAt(0), true), 'E',
     'Shift requests uppercase');
-assertEqual(letterFromKeySymbol('E'.codePointAt(0), false), 'e',
-    'Caps Lock does not request uppercase');
+// Ctrl can affect the keysym's case, so verify both keysyms against the
+// explicit Shift/Caps Lock state for every supported ASCII letter.
+for (const letter of 'abcdefghijklmnopqrstuvwxyz') {
+    for (const symbol of [letter, letter.toUpperCase()]) {
+        for (const [shifted, capsLocked, uppercase] of [
+            [false, false, false],
+            [true, false, true],
+            [false, true, true],
+            [true, true, false],
+        ]) {
+            assertEqual(
+                letterFromKeySymbol(symbol.codePointAt(0), shifted, capsLocked),
+                uppercase ? letter.toUpperCase() : letter,
+                `${symbol}: Shift=${shifted}, Caps Lock=${capsLocked}`,
+            );
+        }
+    }
+}
 assertEqual(letterFromKeySymbol('1'.codePointAt(0), false), '',
     'non-letter keysyms are rejected');
+assertEqual(letterFromKeySymbol('1'.codePointAt(0), false, true), '',
+    'Caps Lock does not turn non-letter keysyms into letters');
 
 const [ok, bytes] = GLib.file_get_contents('extension/accents.json');
 if (!ok)
